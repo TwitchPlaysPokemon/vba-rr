@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <algorithm>
 
 #ifdef HAVE_STRINGS_H
 #   include <strings.h>

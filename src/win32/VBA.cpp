@@ -509,6 +509,8 @@ BOOL VBA::InitInstance()
 	if (!initInput())
 		return FALSE;
 
+	windowTitle = VBA_NAME_AND_VERSION;
+
 	if (!initDisplay())
 	{
 		if (videoOption >= VIDEO_320x240)
@@ -1374,7 +1376,7 @@ void VBA::updateWindowSize(int value)
 		m_pMainWnd = new MainWnd;
 		m_pMainWnd->CreateEx(styleEx,
 		                     theApp.wndClass,
-		                     VBA_NAME_AND_VERSION,
+		                     theApp.windowTitle,
 		                     style,
 		                     x, y, winSizeX, winSizeY,
 		                     NULL,

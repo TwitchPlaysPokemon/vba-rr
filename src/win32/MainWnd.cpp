@@ -1321,7 +1321,7 @@ void MainWnd::winFileClose(bool reopening)
 
 	if (this)
 		RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
-	systemSetTitle(VBA_NAME_AND_VERSION);
+	systemSetTitle(theApp.windowTitle);
 }
 
 bool MainWnd::winFileRun(bool reopening)
@@ -1349,6 +1349,20 @@ bool MainWnd::winFileRun(bool reopening)
 		return false;
 	}
 
+	/*theApp.windowTitle = VBA_NAME_AND_VERSION " " + theApp.gameFilename;
+
+	char buffer[128];
+	if (systemCartridgeType == 0)
+	{
+		// gba
+		strncpy(buffer, (const char *)&rom[0xa0], 12);
+	}
+	else
+	{
+		// gb
+		strncpy(buffer, (const char *)&rom[0x134], 15);
+	}*/
+
 	IMAGE_TYPE type = utilFindType(physicalName);
 
 	if (type == IMAGE_UNKNOWN)
@@ -1363,6 +1377,10 @@ bool MainWnd::winFileRun(bool reopening)
 	{
 		if (!gbLoadRom(physicalName))
 			return false;
+
+		char nameBuffer[16];
+		strncpy(nameBuffer, (const char *)&gbRom[0x134], 15);
+		theApp.windowTitle = VBA_NAME_AND_VERSION " " + CString(nameBuffer);
 
 		gbBorderOn		= theApp.winGbBorderOn;
 		theApp.emulator = GBSystem;
@@ -1393,6 +1411,10 @@ bool MainWnd::winFileRun(bool reopening)
 		int size = CPULoadRom(physicalName);
 		if (!size)
 			return false;
+
+		char nameBuffer[13];
+		strncpy(nameBuffer, (const char *)&rom[0xa0], 12);
+		theApp.windowTitle = VBA_NAME_AND_VERSION " " + CString(nameBuffer);
 
 		flashSetSize(theApp.winFlashSize);
 		rtcEnable(theApp.winRtcEnable);

@@ -85,6 +85,7 @@ public:
 	bool	  useBiosFile;
 	bool	  skipBiosFile;
 	CString	  biosFileName;
+	CString	  windowTitle;
 	bool	  allowLeftRight;
 	bool	  autofireAccountForLag;
 	bool	  nextframeAccountForLag;

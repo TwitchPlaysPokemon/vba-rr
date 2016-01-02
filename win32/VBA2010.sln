@@ -1,6 +1,8 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VBA_VS2010", "VBA2010.vcxproj", "{200824A0-CDBA-45D7-83B8-E5A8468792EC}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VBA_VS2015", "VBA2010.vcxproj", "{200824A0-CDBA-45D7-83B8-E5A8468792EC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wlib7zip", "..\src\win32\7zip\7z\7zip_2010.vcxproj", "{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}"
 EndProject

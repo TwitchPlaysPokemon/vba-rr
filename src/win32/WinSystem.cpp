@@ -412,9 +412,9 @@ void systemShowSpeed(int speed)
 	{
 		CString buffer;
 		if (theApp.showSpeed == 1)
-			buffer.Format(VBA_NAME_AND_VERSION " %3d%%", systemSpeed);
+			buffer.Format(theApp.windowTitle + " %3d%%", systemSpeed);
 		else
-			buffer.Format(VBA_NAME_AND_VERSION " %3d%% (%d fps | %d skipped)",
+			buffer.Format(theApp.windowTitle + " %3d%% (%d fps | %d skipped)",
 			              systemSpeed,
 			              theApp.showRenderedFrames,
 			              systemFrameSkip);

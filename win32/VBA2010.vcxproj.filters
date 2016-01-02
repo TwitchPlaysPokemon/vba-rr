@@ -671,7 +671,6 @@
     <None Include="..\src\win32\gbadvance.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\src\win32\VisualBoyAdvance.exe.manifest" />
     <None Include="ClassDiagram1.cd" />
     <None Include="..\documentation\Changelog.txt">
       <Filter>Docs</Filter>

@@ -867,7 +867,7 @@ BOOL MainWnd::OnOptionsEmulatorShowSpeed(UINT nID)
 	{
 	case ID_OPTIONS_EMULATOR_SHOWSPEED_NONE:
 		theApp.showSpeed = 0;
-		systemSetTitle(VBA_NAME_AND_VERSION);
+		systemSetTitle(theApp.windowTitle);
 		break;
 	case ID_OPTIONS_EMULATOR_SHOWSPEED_PERCENTAGE:
 		theApp.showSpeed = 1;
