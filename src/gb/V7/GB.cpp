@@ -1186,7 +1186,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			gbMemoryMap[0x0d] = &gbWram[wramAddress];
 
 			gbWramBank	  = bank;
-			register_SVBK = value;
+			gbMemory[0xff70] = register_SVBK = value;
 			return;
 		}
 		break;
