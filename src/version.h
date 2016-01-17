@@ -21,6 +21,7 @@
 #endif
 
 #define VBA_NAME "VBA-RR"
+#define PUBLIC_RELEASE
 
 #ifdef USE_GBA_CORE_V7
 #	define VBA_RR_MAJOR_VERSION_NO 24
