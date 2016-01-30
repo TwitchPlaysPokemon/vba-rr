@@ -2031,13 +2031,13 @@ bool gbReadSaveMBC3(const char * name)
 		}
 		else
 		{
-			// Also checks if the battery file it bigger than gbRamSizeMask+1+RTC !
+			// Also checks if the battery file is bigger than gbRamSizeMask+1+RTC !
 			u8 data[1];
 			data[0] = 0;
 			read = gzread(gzFile,
 				data,
 				1);
-			if (read >0) {
+			if (data[0] > 0) {
 				systemMessage(MSG_FAILED_TO_READ_SGM,
 					N_("Battery file's size incompatible with the rom settings %s (%d).\nWarning : save of the battery file is now disabled !"), name, read);
 				gbBatteryError = true;
@@ -2280,8 +2280,8 @@ bool gbReadBatteryFile(const char *file)
 				break;
 			}
 			time_t tmp;
+			tmp = gbDataMBC3.mapperLastTime;
 			systemScreenMessage(ctime(&tmp), 4);
-			gbDataMBC3.mapperLastTime=(u32)tmp;
 			res = true;
 			break;
 		case 0x1b:
