@@ -140,6 +140,7 @@ u32	  gbTimeNow			 = 0;
 int32 gbSynchronizeTicks = GBSYNCHRONIZE_CLOCK_TICKS;
 // emulator features
 int32 gbBattery	   = 0;
+bool gbBatteryError = false;
 int32 gbJoymask[4] = { 0, 0, 0, 0 };
 
 int32 gbRomSizes[] = { 0x00008000, // 32K
@@ -1991,7 +1992,64 @@ bool gbReadSaveMBC2(const char *name)
 	return true;
 }
 
-bool gbReadSaveMBC3(const char *name)
+
+
+bool gbReadSaveMBC3(const char * name)
+{
+	gzFile gzFile = gzopen(name, "rb");
+	if (gzFile == NULL) {
+		return false;
+	}
+	int read = 0;
+	if (gbRam)
+		read = gzread(gzFile,
+			gbRam,
+			(gbRamSizeMask + 1));
+	else
+		read = (gbRamSizeMask + 1);
+	bool res = true;
+	if (read != (gbRamSizeMask + 1)) {
+		systemMessage(MSG_FAILED_TO_READ_SGM,
+			N_("Battery file's size incompatible with the rom settings %s (%d).\nWarning : save of the battery file is now disabled !"), name, read);
+		gbBatteryError = true;
+		res = false;
+	}
+	else if ((gbRom[0x147] == 0xf) || (gbRom[0x147] == 0x10)) {
+		read = gzread(gzFile,
+			&gbDataMBC3.mapperSeconds,
+			sizeof(int) * 10 + sizeof(time_t));
+		if (read != (sizeof(int) * 10 + sizeof(time_t)) && read != 0) {
+			systemMessage(MSG_FAILED_TO_READ_RTC, N_("Failed to read RTC from save game %s (continuing)"),
+				name);
+			res = false;
+		}
+		else if (read == 0)
+		{
+			systemMessage(MSG_FAILED_TO_READ_RTC, N_("Failed to read RTC from save game %s (continuing)"),
+				name);
+			res = false;
+		}
+		else
+		{
+			// Also checks if the battery file it bigger than gbRamSizeMask+1+RTC !
+			u8 data[1];
+			data[0] = 0;
+			read = gzread(gzFile,
+				data,
+				1);
+			if (read >0) {
+				systemMessage(MSG_FAILED_TO_READ_SGM,
+					N_("Battery file's size incompatible with the rom settings %s (%d).\nWarning : save of the battery file is now disabled !"), name, read);
+				gbBatteryError = true;
+				res = false;
+			}
+		}
+	}
+	gzclose(gzFile);
+	return res;
+}
+
+/*bool gbReadSaveMBC3(const char *name)
 {
 	gzFile gzFile = gzopen(name, "rb");
 
@@ -2028,7 +2086,7 @@ bool gbReadSaveMBC3(const char *name)
 
 	gzclose(gzFile);
 	return res;
-}
+}*/
 
 bool gbReadSaveMBC5(const char *name)
 {
@@ -2121,11 +2179,9 @@ bool gbWriteBatteryFile(const char *file, bool extendedSave)
 			break;
 		case 0x0f:
 		case 0x10:
-			gbWriteSaveMBC3(file, extendedSave);
-      			break; // did i break anything
 		case 0x13:
-			//gbWriteSaveMBC3(file, extendedSave);
-			//break;
+			gbWriteSaveMBC3(file, true);
+			break;
 		case 0x1b:
 		case 0x1e:
 			gbWriteSaveMBC5(file);
