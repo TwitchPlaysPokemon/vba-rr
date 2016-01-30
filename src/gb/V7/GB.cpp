@@ -1899,7 +1899,7 @@ void gbWriteSaveMBC3(const char *name, bool extendedSave)
 	{
 		fwrite(&gbDataMBC3.mapperSeconds,
 		       1,
-		       10 * sizeof(int32) + sizeof(u32),
+		       10 * sizeof(int32) + sizeof(u32) + 4,
 		       gzFile);
 	}
 
@@ -2017,8 +2017,8 @@ bool gbReadSaveMBC3(const char * name)
 	else if ((gbRom[0x147] == 0xf) || (gbRom[0x147] == 0x10)) {
 		read = gzread(gzFile,
 			&gbDataMBC3.mapperSeconds,
-			sizeof(int) * 10 + sizeof(time_t));
-		if (read != (sizeof(int) * 10 + sizeof(time_t)) && read != 0) {
+			sizeof(int) * 10 + sizeof(time_t) + 4);
+		if (read != (sizeof(int) * 10 + sizeof(time_t) + 4) && read != 0) {
 			systemMessage(MSG_FAILED_TO_READ_RTC, N_("Failed to read RTC from save game %s (continuing)"),
 				name);
 			res = false;
