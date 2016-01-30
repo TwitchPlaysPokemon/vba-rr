@@ -2121,9 +2121,11 @@ bool gbWriteBatteryFile(const char *file, bool extendedSave)
 			break;
 		case 0x0f:
 		case 0x10:
-		case 0x13:
 			gbWriteSaveMBC3(file, extendedSave);
-			break;
+      			break; // did i break anything
+		case 0x13:
+			//gbWriteSaveMBC3(file, extendedSave);
+			//break;
 		case 0x1b:
 		case 0x1e:
 			gbWriteSaveMBC5(file);
