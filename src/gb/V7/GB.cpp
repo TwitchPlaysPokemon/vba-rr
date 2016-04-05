@@ -716,21 +716,21 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	// DIV register resets on any write
 	case 0x04:
 	{
-		register_DIV = 0;
+		gbMemory[0xff04] = register_DIV = 0;
 		return;
 	}
 	case 0x05:
-		register_TIMA = value;
+		gbMemory[0xff05] = register_TIMA = value;
 		return;
 
 	case 0x06:
-		register_TMA = value;
+		gbMemory[0xff06] = register_TMA = value;
 		return;
 
 	// TIMER control
 	case 0x07:
 	{
-		register_TAC = value;
+		gbMemory[0xff07] = register_TAC = (0xf8 | value);
 
 		gbTimerOn	= (value & 4);
 		gbTimerMode = value & 3;
@@ -755,7 +755,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 
 	case 0x0f:
 	{
-		register_IF = value;
+		gbMemory[0xff0f] = register_IF = (0xe0 | value);
 		gbInterrupt = value;
 		return;
 	}
@@ -821,7 +821,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 		    register_LY > register_WY)
 			gbWindowLine = 144;
 
-		register_LCDC = value;
+		gbMemory[0xff40] = register_LCDC = value;
 
 		return;
 	}
@@ -831,7 +831,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	{
 		//register_STAT = (register_STAT & 0x87) |
 		//      (value & 0x7c);
-		register_STAT = (value & 0xf8) | (register_STAT & 0x07);     // fix ?
+		gbMemory[0xff41] = register_STAT = (value & 0xf8) | (register_STAT & 0x07);     // fix ?
 		// GB bug from Devrs FAQ
 		if (!gbCgbMode && (register_LCDC & 0x80) && gbLcdMode < 2)
 			gbInterrupt |= 2;
@@ -841,14 +841,14 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	// SCY
 	case 0x42:
 	{
-		register_SCY = value;
+		gbMemory[0xff42] = register_SCY = value;
 		return;
 	}
 
 	// SCX
 	case 0x43:
 	{
-		register_SCX = value;
+		gbMemory[0xff43] = register_SCX = value;
 		return;
 	}
 
@@ -862,7 +862,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	// LYC
 	case 0x45:
 	{
-		register_LYC = value;
+		gbMemory[0xff45] = register_LYC = value;
 		if ((register_LCDC & 0x80))
 		{
 			gbCompareLYToLYC();
@@ -878,13 +878,14 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 		gbCopyMemory(0xfe00,
 		             source,
 		             0xa0);
-		register_DMA = value;
+		gbMemory[0xff46] = register_DMA = value;
 		return;
 	}
 
 	// BGP
 	case 0x47:
 	{
+		gbMemory[0xff47] = value;
 		gbBgp[0] = value & 0x03;
 		gbBgp[1] = (value & 0x0c) >> 2;
 		gbBgp[2] = (value & 0x30) >> 4;
@@ -895,6 +896,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	// OBP0
 	case 0x48:
 	{
+		gbMemory[0xff48] = value;
 		gbObp0[0] = value & 0x03;
 		gbObp0[1] = (value & 0x0c) >> 2;
 		gbObp0[2] = (value & 0x30) >> 4;
@@ -905,6 +907,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	// OBP1
 	case 0x49:
 	{
+		gbMemory[0xff49] = value;
 		gbObp1[0] = value & 0x03;
 		gbObp1[1] = (value & 0x0c) >> 2;
 		gbObp1[2] = (value & 0x30) >> 4;
@@ -913,11 +916,11 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 	}
 
 	case 0x4a:
-		register_WY = value;
+		gbMemory[0xff4a] = register_WY = value;
 		return;
 
 	case 0x4b:
-		register_WX = value;
+		gbMemory[0xff4b] = register_WX = value;
 		return;
 
 	// KEY1
@@ -945,7 +948,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			gbMemoryMap[0x09] = &gbVram[vramAddress + 0x1000];
 
 			gbVramBank	 = value;
-			register_VBK = value;
+			gbMemory[0xff4f] = register_VBK = (0xfe | value);
 		}
 		return;
 	}
@@ -960,7 +963,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 
 			gbHdmaSource = (value << 8) | (register_HDMA2 & 0xf0);
 
-			register_HDMA1 = value;
+			gbMemory[0xff51] = register_HDMA1 = value;
 			return;
 		}
 		break;
@@ -975,7 +978,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 
 			gbHdmaSource = (register_HDMA1 << 8) | (value);
 
-			register_HDMA2 = value;
+			gbMemory[0xff52] = register_HDMA2 = value;
 			return;
 		}
 		break;
@@ -989,7 +992,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			value = value & 0x1f;
 			gbHdmaDestination  = (value << 8) | (register_HDMA4 & 0xf0);
 			gbHdmaDestination += 0x8000;
-			register_HDMA3	   = value;
+			gbMemory[0xff53] = register_HDMA3 = value;
 			return;
 		}
 		break;
@@ -1003,7 +1006,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			value = value & 0xf0;
 			gbHdmaDestination  = ((register_HDMA3 & 0x1f) << 8) | value;
 			gbHdmaDestination += 0x8000;
-			register_HDMA4	   = value;
+			gbMemory[0xff54] = register_HDMA4 = value;
 			return;
 		}
 		break;
@@ -1019,11 +1022,11 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			{
 				if (value & 0x80)
 				{
-					register_HDMA5 = (value & 0x7f);
+					gbMemory[0xff55] = register_HDMA5 = (value & 0x7f);
 				}
 				else
 				{
-					register_HDMA5 = 0xff;
+					gbMemory[0xff55] = register_HDMA5 = 0xff;
 					gbHdmaOn	   = 0;
 				}
 			}
@@ -1032,7 +1035,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 				if (value & 0x80)
 				{
 					gbHdmaOn	   = 1;
-					register_HDMA5 = value & 0x7f;
+					gbMemory[0xff55] = register_HDMA5 = value & 0x7f;
 					if (gbLcdMode == 0)
 						gbDoHdma();
 				}
@@ -1065,10 +1068,10 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 					gbHdmaDestination += gbHdmaBytes;
 					gbHdmaSource	  += gbHdmaBytes;
 
-					register_HDMA3 = ((gbHdmaDestination - 0x8000) >> 8) & 0x1f;
-					register_HDMA4 = gbHdmaDestination & 0xf0;
-					register_HDMA1 = (gbHdmaSource >> 8) & 0xff;
-					register_HDMA2 = gbHdmaSource & 0xf0;
+					gbMemory[0xff53] = register_HDMA3 = ((gbHdmaDestination - 0x8000) >> 8) & 0x1f;
+					gbMemory[0xff54] = register_HDMA4 = gbHdmaDestination & 0xf0;
+					gbMemory[0xff51] = register_HDMA1 = (gbHdmaSource >> 8) & 0xff;
+					gbMemory[0xff52] = register_HDMA2 = gbHdmaSource & 0xf0;
 				}
 			}
 			return;
@@ -1187,7 +1190,7 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 			gbMemoryMap[0x0d] = &gbWram[wramAddress];
 
 			gbWramBank	  = bank;
-			gbMemory[0xff70] = register_SVBK = value;
+			gbMemory[0xff70] = register_SVBK = (0xf8 | value);
 			return;
 		}
 		break;
@@ -1195,8 +1198,8 @@ void gbWriteMemoryWrapped(register u16 address, register u8 value)
 
 	case 0xff:
 	{
-		register_IE	 = value;
-		register_IF &= value;
+		gbMemory[0xffff] = register_IE = value;
+		gbMemory[0xff0f] = register_IF = (register_IF & value) | 0xe0;
 		return;
 	}
 	}
@@ -1652,6 +1655,15 @@ void gbReset()
 	gbInterrupt		= 1;
 	gbInterruptWait = 0;
 
+	//follow bgb, the leader!
+	memset(gbMemory + 0xff00, 0xff, 0x80);
+	gbMemory[0xff6c] = 0xfe;
+	gbMemory[0xff72] = 0;
+	gbMemory[0xff73] = 0;
+	gbMemory[0xff74] = 0;
+	gbMemory[0xff75] = 0x8f;
+	gbMemory[0xff76] = 0;
+	gbMemory[0xff77] = 0;
 	register_DIV   = 0;
 	register_TIMA  = 0;
 	register_TMA   = 0;
@@ -3397,6 +3409,7 @@ void gbEmulate(int ticksToStop)
 		while (gbDivTicks <= 0)
 		{
 			register_DIV++;
+			gbMemory[0xff04] = register_DIV;
 			gbDivTicks += GBDIV_CLOCK_TICKS;
 		}
 
@@ -3625,6 +3638,7 @@ void gbEmulate(int ticksToStop)
 					gbInterrupt |= 4;
 				}
 
+				gbMemory[0xff05] = register_TIMA;
 				gbTimerTicks += gbTimerClockTicks;
 			}
 		}
