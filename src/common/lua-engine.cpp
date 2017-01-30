@@ -1310,6 +1310,13 @@ int vba_emulating(lua_State *L)
 	return 1;
 }
 
+// void vba.screenshot()
+int vba_screenshot(lua_State *L)
+{
+	systemScreenCapture(0);
+	return 0;
+}
+
 int movie_isactive(lua_State *L)
 {
 	lua_pushboolean(L, VBAMovieIsActive());
@@ -4419,6 +4426,7 @@ static const struct luaL_reg vbalib[] = {
 	{ "registerafter",	vba_registerafter	  },
 	{ "registerexit",	vba_registerexit	  },
 	{ "message",		vba_message			  },
+	{ "screenshot",     vba_screenshot        },
 	{ "print",			print				  }, // sure, why not
 	{ NULL,				NULL				  }
 };

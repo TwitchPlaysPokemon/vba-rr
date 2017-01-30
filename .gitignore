@@ -253,3 +253,6 @@ _Pvt_Extensions
 
 win32/.VS2010/
 win32/__*/
+
+/win32/VBA2010.VC.db
+/win32/userconfig/svnrev.h
